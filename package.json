@@ -1,0 +1,24 @@
+{
+	"name": "node-red-contrib-timeouttrigger",
+	"version": "0.0.1",
+	"description": "This node will pipe any received `msg` to its output. At the same time a time-out interval is set. Upon time-out a defined payload is send. Each new message will reset the time-out.",
+	"main": "timeouttrigger.js",
+	"scripts": {},
+	"repository": {
+		"type": "git",
+		"url": "github.com/bla"
+	},
+	"keywords": [
+		"node-red",
+		"time-out",
+		"trigger"
+	],
+	"author": "Sineos",
+	"license": "Apache-2.0",
+	"node-red": {
+		"nodes": {
+			"timeouttrigger": "timeouttrigger.js"
+		}
+	},
+	"dependencies": {}
+}
