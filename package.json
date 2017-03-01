@@ -6,7 +6,7 @@
 	"scripts": {},
 	"repository": {
 		"type": "git",
-		"url": "github.com/bla"
+		"url": "https://github.com/Sineos/node-red-contrib-timeouttrigger"
 	},
 	"keywords": [
 		"node-red",
