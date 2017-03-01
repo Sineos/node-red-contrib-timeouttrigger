@@ -53,11 +53,11 @@ module.exports = function(RED) {
 			clearTimeout(tout);
 			node.status({fill:"green",shape:"dot"});
 			tout = setTimeout(function() {
-			var msg2 = RED.util.cloneMessage(msg);
-			msg2.payload = node.ontimeoutval;
-			node.send(msg2);
-			tout = null;
-			node.status({fill:"red",shape:"ring",text:"timed out"});
+				var msg2 = RED.util.cloneMessage(msg);
+				msg2.payload = node.ontimeoutval;
+				node.send(msg2);
+				tout = null;
+				node.status({fill:"red",shape:"ring",text:"timed out"});
 			},node.duration);
 		});
 		this.on("close", function() {
