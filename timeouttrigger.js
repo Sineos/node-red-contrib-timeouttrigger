@@ -23,12 +23,13 @@ module.exports = function(RED) {
     this.duration = n.duration || 5;
     this.ontimeoutval = n.ontimeoutval || '0';
     this.ontimeouttype = n.ontimeouttype || 'str';
+    this.passthrough = n.passthrough || true;
 
     if (this.duration <= 0) {
       this.duration = 0;
     } else {
       if (this.units === 's') {
-        this.duration = this.duration * 1000;
+        this.duration *= 1000;
       }
       if (this.units === 'min') {
         this.duration = this.duration * 1000 * 60;
@@ -53,17 +54,25 @@ module.exports = function(RED) {
     var node = this;
     var tout = null;
 
-    this.on('input', function(msg) {
-      node.send(msg);
+    this.on('input', function(msg, send, done) {
+      send = send || function() {
+        node.send.apply(node, arguments);
+      };
+      if (this.passthrough) {
+        send(msg);
+      }
       clearTimeout(tout);
       node.status({fill:'green', shape:'dot'});
       tout = setTimeout(function() {
         var msg2 = RED.util.cloneMessage(msg);
         msg2.payload = node.ontimeoutval;
-        node.send(msg2);
+        send(msg2);
         tout = null;
         node.status({fill:'red', shape:'ring', text:'timed out'});
       }, node.duration);
+      if (done) {
+        done();
+      }
     });
 
     this.on('close', function() {

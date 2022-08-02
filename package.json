@@ -1,24 +1,27 @@
 {
-	"name": "node-red-contrib-timeouttrigger",
-	"version": "0.0.2",
-	"description": "This node will pipe any received `msg` to its output. At the same time a time-out interval is set. Upon time-out a defined payload is send. Each new message will reset the time-out.",
-	"main": "timeouttrigger.js",
-	"scripts": {},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Sineos/node-red-contrib-timeouttrigger"
-	},
-	"keywords": [
-		"node-red",
-		"time-out",
-		"trigger"
-	],
-	"author": "Sineos",
-	"license": "Apache-2.0",
-	"node-red": {
-		"nodes": {
-			"timeouttrigger": "timeouttrigger.js"
-		}
-	},
-	"dependencies": {}
+  "name": "red-contrib-timeouttrigger",
+  "version": "0.0.3",
+  "description": "This node will pipe any received `msg` to its output. At the same time a time-out interval is set. Upon time-out a defined payload is send. Each new message will reset the time-out.",
+  "main": "timeouttrigger.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sineos/node-red-contrib-timeouttrigger.git"
+  },
+  "keywords": [
+    "node-red",
+    "time-out",
+    "trigger"
+  ],
+  "author": "Sineos",
+  "license": "Apache-2.0",
+  "node-red": {
+    "nodes": {
+      "timeouttrigger": "timeouttrigger.js"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/Sineos/node-red-contrib-timeouttrigger/issues"
+  },
+  "homepage": "https://github.com/Sineos/node-red-contrib-timeouttrigger#readme"
 }

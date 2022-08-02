@@ -15,59 +15,63 @@
 -->
 
 <script type="text/javascript">
-	RED.nodes.registerType('timeouttrigger',{
-		category: 'function',
-		color:"#E6E0F8",
-		defaults: {
-			ontimeouttype: {value:'str'},
-			//ontimeoutval: {value:"0", validate:RED.validators.typedInput("ontimeouttype")},
-			ontimeoutval: {value:"0"},
-			duration: {value:"5",required:true,validate:RED.validators.number()},
-			units: {value:"s"},
-			name: {value:""}
-		},
-		inputs:1,
-		outputs:1,
-		icon: "timeouttrigger.png",
-		label: function() {
-			return this.name + " " + this.duration + this.units || "timeouttrigger" + " " + this.duration + this.units;
-		},
-		labelStyle: function() {
-			return this.name?"node_label_italic":"";
-		},
-		oneditprepare: function() {
-			$("#node-input-ontimeoutval").typedInput({
-				default: 'str',
-				typeField: $("#node-input-ontimeouttype"),
-				types:['str','num','bool']
-			});
-		}
-	});
+  RED.nodes.registerType('timeouttrigger',{
+    category: 'function',
+    color:"#E6E0F8",
+    defaults: {
+      ontimeouttype: {value:'str'},
+      //ontimeoutval: {value:"0", validate:RED.validators.typedInput("ontimeouttype")},
+      ontimeoutval: {value:"",required:true},
+      duration: {value:"",required:true,validate:RED.validators.number()},
+      units: {value:"s"},
+      passthrough: {value: true},
+      name: {value:""}
+    },
+    inputs:1,
+    outputs:1,
+    icon: "timeouttrigger.png",
+    label: function() {
+      return this.name + " " + this.duration + this.units || "timeouttrigger" + " " + this.duration + this.units;
+    },
+    labelStyle: function() {
+      return this.name?"node_label_italic":"";
+    },
+    oneditprepare: function() {
+      $("#node-input-ontimeoutval").typedInput({
+        default: 'str',
+        typeField: $("#node-input-ontimeouttype"),
+        types:['str','num','bool']
+      });
+    }
+  });
 </script>
 
 <script type="text/x-red" data-template-name="timeouttrigger">
-	<div class="form-row">
-		<label><i class="fa fa-clock-o"></i> Time-Out</label>
-		<input type="text" id="node-input-duration" style="text-align:end; width:70px !important">
-		<select id="node-input-units" style="width:140px !important">
-			<option value="ms">Miliseconds</option>
-			<option value="s">Seconds</option>
-			<option value="min">Minutes</option>
-			<option value="hr">Hours</option>
-		</select>
-	</div>
-	<div class="form-row">
-		<label for="node-input-ontimeouttype"><i class="fa fa-feed"></i> Send on Time-Out</label>
-		<input type="hidden" id="node-input-ontimeouttype">
-		<input style="width: 70%" type="text" id="node-input-ontimeoutval">
-	</div>
-	<div class="form-row">
-		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-		<input type="text" id="node-input-name" placeholder="Name"></input>
-	</div>
+  <div class="form-row">
+      <label style="width: 180px !important" for="node-input-duration"><i class="fa fa-clock-o"></i> Time-Out</label>
+      <input type="text" id="node-input-duration" style="text-align:end; width:100px !important">
+      <select id="node-input-units" style="width:140px !important">
+          <option value="ms">Miliseconds</option>
+          <option value="s">Seconds</option>
+          <option value="min">Minutes</option>
+          <option value="hr">Hours</option>
+      </select>
+  </div>
+  <div class="form-row">
+    <label style="width: 180px !important" for="node-input-ontimeouttype"><i class="fa fa-feed"></i> Send on Time-Out</label>
+      <input type="hidden" id="node-input-ontimeouttype">
+      <input type="text" id="node-input-ontimeoutval" placeholder="Time-Out Value" style="text-align:end; width:245px !important">
+  </div>
+  <div class="form-row">
+    <label style="width: 180px !important" for="node-input-passthrough"><i class="fa fa-sign-out"></i> Pass-through messages</label>
+      <input type="checkbox" id="node-input-passthrough" style="margin-left: 0px; vertical-align: middle; width: auto !important;">
+  <div class="form-row">
+    <label style="width: 180px !important" for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name" style="width:245px !important"></input>
+  </div>
 </script>
 
 <script type="text/x-red" data-help-name="timeouttrigger">
-	<p>Pipes <i>any</i> <code>msg</code> while resetting a time-out. Upon time-out a defined value is send.</p>
+  <p>Pipes <i>any</i> <code>msg</code> while resetting a time-out. Upon time-out a defined value is send.
+  Turning off <code>Pass-through messages</code> will stop piping the incoming messages, so only the time-out values is send.</p>
 </script>
-
