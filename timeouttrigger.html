@@ -42,6 +42,11 @@
         typeField: $("#node-input-ontimeouttype"),
         types:['str','num','bool']
       });
+ 
+      if (typeof this.passthrough  === 'undefined'){
+        this.passthrough = true;
+        $("#node-input-passthrough").prop('checked', true);
+      }
     }
   });
 </script>

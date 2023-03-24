@@ -23,7 +23,7 @@ module.exports = function(RED) {
     this.duration = n.duration || 5;
     this.ontimeoutval = n.ontimeoutval || '0';
     this.ontimeouttype = n.ontimeouttype || 'str';
-    this.passthrough = n.passthrough || true;
+    this.passthrough = n.passthrough;
 
     if (this.duration <= 0) {
       this.duration = 0;
@@ -58,6 +58,7 @@ module.exports = function(RED) {
       send = send || function() {
         node.send.apply(node, arguments);
       };
+
       if (this.passthrough) {
         send(msg);
       }
