@@ -23,7 +23,7 @@ module.exports = function(RED) {
     this.duration = n.duration || 5;
     this.ontimeoutval = n.ontimeoutval || '0';
     this.ontimeouttype = n.ontimeouttype || 'str';
-    this.passthrough = n.passthrough;
+    this.passthrough = n.passthrough ?? true; // default to true if value is nullish
 
     if (this.duration <= 0) {
       this.duration = 0;
