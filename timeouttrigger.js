@@ -16,72 +16,87 @@
 
 module.exports = function(RED) {
   'use strict';
-  function TimeOutTrigger(n) {
-    RED.nodes.createNode(this, n);
 
-    this.units = n.units || 's';
-    this.duration = n.duration || 5;
-    this.ontimeoutval = n.ontimeoutval || '0';
-    this.ontimeouttype = n.ontimeouttype || 'str';
-    this.passthrough = n.passthrough ?? true; // default to true if value is nullish
+  class TimeOutTrigger {
+    constructor(config) {
+      RED.nodes.createNode(this, config);
 
-    if (this.duration <= 0) {
-      this.duration = 0;
-    } else {
-      if (this.units === 's') {
-        this.duration *= 1000;
+      this.units = config.units || 's';
+      this.duration = Number(config.duration) || 5;
+      this.OnTimeoutVal = config.OnTimeoutVal || '0';
+      this.OnTimeoutType = config.OnTimeoutType || 'str';
+      this.passthrough = config.passthrough ?? true;
+      this.sendTimeoutValue = config.sendTimeoutValue ?? 'once';
+      this.interval = Number(config.interval) || 5;
+      this.intervalUnits = config.IntervalUnits || 's';
+
+      this.duration *= this.getMultiplier(this.units);
+      this.interval *= this.getMultiplier(this.intervalUnits);
+
+      if (this.OnTimeoutType === 'num' && !isNaN(this.OnTimeoutVal)) {
+        this.OnTimeoutVal = Number(this.OnTimeoutVal);
+      } else if (this.OnTimeoutVal === 'true' || this.OnTimeoutVal === 'false') {
+        this.OnTimeoutVal = (this.OnTimeoutVal === 'true');
+      } else if (this.OnTimeoutVal === 'null') {
+        this.OnTimeoutType = 'null';
+        this.OnTimeoutVal = null;
       }
-      if (this.units === 'min') {
-        this.duration = this.duration * 1000 * 60;
-      }
-      if (this.units === 'hr') {
-        this.duration = this.duration * 1000 * 60 * 60;
+
+      this.on('input', this.handleInput);
+      this.on('close', this.handleClose);
+    }
+
+    getMultiplier(unit) {
+      switch (unit) {
+        case 's': return 1000;
+        case 'min': return 1000 * 60;
+        case 'hr': return 1000 * 60 * 60;
+        default: return 1;
       }
     }
 
-
-    if ((this.ontimeouttype === 'num') && (!isNaN(this.ontimeoutval))) {
-      this.ontimeoutval = Number(this.ontimeoutval);
-    } else if (this.ontimeoutval === 'true' || this.ontimeoutval === 'false') {
-      (this.ontimeoutval === 'true' ? this.ontimeoutval = true : this.ontimeoutval = false);
-    } else if (this.ontimeoutval === 'null') {
-      this.ontimeouttype = 'null';
-      this.ontimeoutval = null;
-    } else {
-      this.ontimeoutval = String(this.ontimeoutval);
-    }
-
-    var node = this;
-    var tout = null;
-
-    this.on('input', function(msg, send, done) {
+    handleInput(msg, send, done) {
       send = send || function() {
-        node.send.apply(node, arguments);
+        this.send.apply(this, arguments);
       };
 
       if (this.passthrough) {
         send(msg);
       }
-      clearTimeout(tout);
-      node.status({fill:'green', shape:'dot'});
-      tout = setTimeout(function() {
-        var msg2 = RED.util.cloneMessage(msg);
-        msg2.payload = node.ontimeoutval;
+
+      clearTimeout(this.tout);
+      clearInterval(this.reTrigger);
+
+      this.status({ fill: 'green', shape: 'dot' });
+
+      const sendMessage = () => {
+        const msg2 = RED.util.cloneMessage(msg);
+        msg2.payload = this.OnTimeoutVal;
         send(msg2);
-        tout = null;
-        node.status({fill:'red', shape:'ring', text:'timed out'});
-      }, node.duration);
+      };
+
+      this.tout = setTimeout(() => {
+        this.status({ fill: 'red', shape: 'ring', text: 'timed out' });
+
+        if (this.sendTimeoutValue === 'once') {
+          sendMessage();
+        } else if (this.sendTimeoutValue === 'continuously') {
+          sendMessage();
+          this.reTrigger = setInterval(sendMessage, this.interval);
+        }
+      }, this.duration);
+
       if (done) {
         done();
       }
-    });
+    }
 
-    this.on('close', function() {
-      if (tout) {
-        clearTimeout(tout);
-      }
-      node.status({});
-    });
+    handleClose() {
+      clearTimeout(this.tout);
+      clearInterval(this.reTrigger);
+      this.status({});
+    }
   }
+
   RED.nodes.registerType('timeouttrigger', TimeOutTrigger);
 };

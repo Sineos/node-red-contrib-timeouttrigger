@@ -1,13 +1,13 @@
 module.exports = {
   "env": {
-    "node": false,
+    "node": true,
     "browser": true,
     "commonjs": true,
     "jquery": true
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 7,
+    "ecmaVersion": 'latest',
     "sourceType": "script"
   },
   "rules": {
@@ -60,7 +60,7 @@ module.exports = {
     "id-match": "error",
     "indent": [
       "error",
-      2, { "VariableDeclarator": 2 }
+      2, { "VariableDeclarator": 1, "SwitchCase": 1 }
     ],
     "init-declarations": "off",
     "jsx-quotes": "error",
@@ -174,7 +174,7 @@ module.exports = {
     ],
     "object-curly-spacing": [
       "error",
-      "never"
+      "always"
     ],
     "object-property-newline": [
       "error",
